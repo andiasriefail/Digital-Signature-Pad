@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Signature Pad</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Inter:wght@300;400;500&family=Dancing+Script:wght@600&family=Pacifico&family=Great+Vibes&family=Satisfy&family=Caveat:wght@600&family=Pinyon+Script&family=Playfair+Display:ital,wght@1,700&family=Courier+Prime:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --white:  #F8F8FA;
+    --grey-1: #EEEEF5;
+    --grey-2: #D8D8E8;
+    --grey-3: #B0B0C8;
+    --purple: #7B6FD4;
+    --blue:   #5B8FE8;
+    --dark:   #1A1A2E;
+    --mid:    #4A4A6A;
+    --grad:   linear-gradient(135deg, #7B6FD4, #5B8FE8);
+  }
+
+  html, body {
+    min-height: 100vh;
+    background: var(--white);
+    font-family: 'Inter', sans-serif;
+    color: var(--dark);
+    margin: 0; padding: 0;
+  }
+
+  .page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  .header {
+    padding: 20px 32px 16px;
+    border-bottom: 1px solid var(--grey-1);
+    background: #fff;
+    display: flex; align-items: center; gap: 14px;
+    flex-shrink: 0;
+  }
+
+  .header-icon {
+    width: 38px; height: 38px; border-radius: 11px;
+    background: var(--grad);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+
+  .header-icon svg {
+    width: 18px; height: 18px; fill: none; stroke: #fff;
+    stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .header-text h1 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px; font-weight: 600;
+    color: var(--dark); letter-spacing: -0.3px;
+  }
+
+  .header-text p { font-size: 12px; color: var(--grey-3); margin-top: 1px; }
+
+  /* Main content */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+  }
+
+  /* Section card */
+  .section {
+    background: #fff;
+    border-bottom: 1px solid var(--grey-1);
+    overflow: hidden;
+  }
+
+  .section.name-section { padding: 0; }
+
+  .section-header {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--grey-1);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .section-title {
+    font-size: 11px; font-weight: 500;
+    color: var(--grey-3); letter-spacing: 0.8px; text-transform: uppercase;
+  }
+
+  .section-body { padding: 16px 20px; }
+
+  /* Name input */
+  .name-fields {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+
+  .name-input {
+    flex: 1; min-width: 160px;
+    border: 1.5px solid var(--grey-2);
+    border-radius: 10px; padding: 8px 12px;
+    font-size: 13px; font-family: 'Inter', sans-serif;
+    color: var(--dark); background: var(--white);
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .name-input::placeholder { color: var(--grey-3); }
+  .name-input:focus {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(123,111,212,0.12);
+  }
+
+  .name-font-select {
+    appearance: none;
+    background: var(--grey-1); border: none; border-radius: 8px;
+    padding: 8px 28px 8px 10px;
+    font-size: 12px; font-family: 'Inter', sans-serif;
+    font-weight: 500; color: var(--mid); cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23B0B0C8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center;
+    outline: none; transition: background-color 0.15s; min-width: 120px;
+  }
+
+  .name-font-select:hover { background-color: var(--grey-2); }
+
+  .name-size-wrap {
+    display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  }
+
+  .name-size-label {
+    font-size: 11px; font-weight: 500; color: var(--grey-3); white-space: nowrap;
+  }
+
+  .name-size-slider {
+    -webkit-appearance: none; appearance: none;
+    width: 80px; height: 4px; border-radius: 2px;
+    background: var(--grey-2); outline: none; cursor: pointer;
+  }
+
+  .name-size-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--purple);
+    box-shadow: 0 1px 4px rgba(123,111,212,0.4);
+    cursor: pointer; transition: transform 0.15s;
+  }
+
+  .name-size-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+  .btn-add-name {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 10px;
+    font-size: 12px; font-weight: 500; font-family: 'Inter', sans-serif;
+    cursor: pointer; border: none;
+    background: var(--grad); color: #fff;
+    box-shadow: 0 2px 8px rgba(123,111,212,0.25);
+    transition: all 0.18s; white-space: nowrap; flex-shrink: 0;
+  }
+
+  .btn-add-name svg {
+    width: 13px; height: 13px; fill: none; stroke: #fff;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .btn-add-name:hover {
+    box-shadow: 0 4px 14px rgba(123,111,212,0.35);
+    transform: translateY(-1px);
+  }
+
+  /* Canvas area */
+  .canvas-section-header {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--grey-1);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .mode-toggle {
+    display: none; align-items: center; gap: 0;
+    background: var(--grey-1); border-radius: 8px; padding: 3px;
+  }
+
+  .mode-toggle.visible { display: flex; }
+
+  .mode-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 6px;
+    font-size: 11px; font-weight: 500; font-family: 'Inter', sans-serif;
+    cursor: pointer; border: none; background: transparent;
+    color: var(--grey-3); transition: all 0.18s; text-transform: none; letter-spacing: 0;
+  }
+
+  .mode-btn svg {
+    width: 12px; height: 12px; fill: none; stroke: currentColor;
+    stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .mode-btn.active {
+    background: #fff; color: var(--purple);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+
+  .canvas-container {
+    position: relative; background: var(--white);
+    width: 100%;
+  }
+
+  .canvas-inner {
+    position: relative;
+    width: 100%;
+  }
+
+  #signatureCanvas {
+    display: block; width: 100%; height: clamp(240px, 42vh, 360px);
+    touch-action: none; position: relative; z-index: 1;
+    cursor: crosshair;
+  }
+
+  #nameCanvas {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 3; pointer-events: none;
+  }
+
+  #nameCanvas.drag-mode { pointer-events: auto; cursor: grab; }
+  #nameCanvas.drag-mode.dragging { cursor: grabbing; }
+
+  .empty-hint {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none; z-index: 2; transition: opacity 0.2s;
+  }
+
+  .empty-hint span { font-size: 13px; color: var(--grey-3); font-weight: 400; }
+
+  /* Controls row */
+  .controls {
+    padding: 14px 20px;
+    border-top: 1px solid var(--grey-1);
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+
+  .control-group { display: flex; align-items: center; gap: 8px; }
+
+  .control-label {
+    font-size: 11px; font-weight: 500; color: var(--grey-3); white-space: nowrap;
+  }
+
+  /* Color swatches — more colors in a wrap grid */
+  .swatches { display: flex; gap: 6px; flex-wrap: wrap; max-width: 200px; }
+
+  .swatch {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid transparent; cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s; position: relative;
+    flex-shrink: 0;
+  }
+
+  .swatch:hover { transform: scale(1.18); }
+  .swatch.active { border-color: var(--purple); transform: scale(1.1); }
+  .swatch.active::after {
+    content: ''; position: absolute; inset: -4px;
+    border-radius: 50%; border: 1.5px solid rgba(123,111,212,0.35);
+  }
+
+  input[type=range] {
+    -webkit-appearance: none; appearance: none;
+    width: 80px; height: 4px; border-radius: 2px;
+    background: var(--grey-2); outline: none; cursor: pointer;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--purple);
+    box-shadow: 0 1px 4px rgba(123,111,212,0.4);
+    cursor: pointer; transition: transform 0.15s;
+  }
+
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+  .divider { width: 1px; height: 28px; background: var(--grey-1); flex-shrink: 0; }
+
+  .btn-group { display: flex; gap: 8px; margin-left: auto; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 13px; border-radius: 10px;
+    font-size: 12px; font-weight: 500; font-family: 'Inter', sans-serif;
+    cursor: pointer; border: none; transition: all 0.18s; white-space: nowrap;
+  }
+
+  .btn svg {
+    width: 13px; height: 13px; fill: none; stroke: currentColor;
+    stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+  }
+
+  .btn-ghost { background: var(--grey-1); color: var(--mid); }
+  .btn-ghost:hover { background: var(--grey-2); color: var(--dark); }
+
+  .btn-primary {
+    background: var(--grad); color: #fff;
+    box-shadow: 0 2px 8px rgba(123,111,212,0.25);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 4px 14px rgba(123,111,212,0.35);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn:disabled {
+    opacity: 0.4; cursor: not-allowed;
+    transform: none !important; box-shadow: none !important;
+  }
+
+  /* Footer bar */
+  .footer-bar {
+    padding: 14px 32px;
+    border-top: 1px solid var(--grey-1);
+    background: #fff;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .footer-note {
+    font-size: 11px; color: var(--grey-3);
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .footer-note svg {
+    width: 13px; height: 13px; fill: none; stroke: var(--grey-3);
+    stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+  }
+
+  .format-select {
+    appearance: none; background: var(--grey-1);
+    border: none; border-radius: 8px;
+    padding: 7px 28px 7px 10px;
+    font-size: 12px; font-family: 'Inter', sans-serif;
+    font-weight: 500; color: var(--mid); cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23B0B0C8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center;
+    outline: none; transition: background-color 0.15s;
+  }
+
+  .format-select:hover { background-color: var(--grey-2); }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--dark); color: #fff;
+    padding: 10px 18px; border-radius: 10px;
+    font-size: 12px; font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+    z-index: 999; white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 600px) {
+    .header, .footer-bar { padding-left: 16px; padding-right: 16px; }
+    .section-header, .canvas-section-header, .section-body, .controls { padding-left: 16px; padding-right: 16px; }
+    .controls { gap: 8px; }
+    .btn-group { width: 100%; justify-content: flex-end; flex-wrap: wrap; }
+    .name-fields { flex-direction: column; align-items: stretch; }
+    .name-input { min-width: unset; }
+    .swatches { max-width: unset; }
+    #signatureCanvas { height: clamp(200px, 38vh, 280px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-icon">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+        <path d="M2 2l7.586 7.586"/>
+        <circle cx="11" cy="11" r="2"/>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>Digital Signature Pad</h1>
+      <p>Draw, add a name, and download your signature</p>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Name section -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-title">Name (Optional)</span>
+      </div>
+      <div class="section-body">
+        <div class="name-fields">
+          <input type="text" class="name-input" id="nameInput" placeholder="Type your name..." maxlength="60">
+          <select class="name-font-select" id="nameFontSelect">
+            <option value="Dancing Script">Dancing Script</option>
+            <option value="Great Vibes">Great Vibes</option>
+            <option value="Pacifico">Pacifico</option>
+            <option value="Satisfy">Satisfy</option>
+            <option value="Caveat">Caveat</option>
+            <option value="Pinyon Script">Pinyon Script</option>
+            <option value="Playfair Display">Playfair Italic</option>
+            <option value="DM Sans">DM Sans</option>
+            <option value="Courier Prime">Courier</option>
+            <option value="Georgia, serif">Georgia</option>
+          </select>
+          <div class="name-size-wrap">
+            <span class="name-size-label">Size</span>
+            <input type="range" class="name-size-slider" id="nameSizeSlider" min="14" max="72" value="32" step="2">
+          </div>
+          <button class="btn-add-name" id="addNameBtn">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Canvas section -->
+    <div class="section">
+      <div class="canvas-section-header">
+        <span class="section-title">Signature Area</span>
+        <div class="mode-toggle" id="modeToggle">
+          <button class="mode-btn active" id="modeDrawBtn">
+            <svg viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+            Draw
+          </button>
+          <button class="mode-btn" id="modeMoveBtn">
+            <svg viewBox="0 0 24 24"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M12 12v.01"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>
+            Move Name
+          </button>
+        </div>
+      </div>
+
+      <div class="canvas-container" id="canvasContainer">
+        <div class="canvas-inner" id="canvasInner">
+          <canvas id="signatureCanvas"></canvas>
+          <canvas id="nameCanvas"></canvas>
+          <div class="empty-hint" id="emptyHint">
+            <span>Start drawing your signature here</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <div class="control-group">
+          <span class="control-label">Color</span>
+          <div class="swatches">
+            <div class="swatch active" data-color="#1A1A2E" style="background:#1A1A2E;" title="Black"></div>
+            <div class="swatch" data-color="#7B6FD4" style="background:#7B6FD4;" title="Purple"></div>
+            <div class="swatch" data-color="#5B8FE8" style="background:#5B8FE8;" title="Blue"></div>
+            <div class="swatch" data-color="#4A4A6A" style="background:#4A4A6A;" title="Slate"></div>
+            <div class="swatch" data-color="#2D6A4F" style="background:#2D6A4F;" title="Dark Green"></div>
+            <div class="swatch" data-color="#E63946" style="background:#E63946;" title="Red"></div>
+            <div class="swatch" data-color="#D62828" style="background:#D62828;" title="Dark Red"></div>
+            <div class="swatch" data-color="#E76F51" style="background:#E76F51;" title="Orange"></div>
+            <div class="swatch" data-color="#2A9D8F" style="background:#2A9D8F;" title="Teal"></div>
+            <div class="swatch" data-color="#264653" style="background:#264653;" title="Petrol"></div>
+            <div class="swatch" data-color="#8B5E3C" style="background:#8B5E3C;" title="Brown"></div>
+            <div class="swatch" data-color="#6D6875" style="background:#6D6875;" title="Mauve"></div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="control-group">
+          <span class="control-label">Thickness</span>
+          <input type="range" id="thicknessSlider" min="1" max="6" value="2" step="0.5">
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="btn-group">
+          <button class="btn btn-ghost" id="removeNameBtn" style="display:none;">
+            <svg viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/><line x1="15" y1="5" x2="19" y2="9"/></svg>
+            Remove Name
+          </button>
+          <button class="btn btn-ghost" id="undoBtn" disabled>
+            <svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+            Undo
+          </button>
+          <button class="btn btn-ghost" id="clearBtn" disabled>
+            <svg viewBox="0 0 24 24"><path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M8 6V4h8v2"/></svg>
+            Clear
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer bar -->
+  <div class="footer-bar">
+    <div class="footer-note">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      All processing is done locally, nothing is uploaded
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <select class="format-select" id="formatSelect">
+        <option value="png">PNG</option>
+        <option value="svg">SVG</option>
+        <option value="jpeg">JPEG</option>
+      </select>
+      <button class="btn btn-primary" id="downloadBtn" disabled>
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const sigCanvas    = document.getElementById('signatureCanvas');
+  const nameCanvas   = document.getElementById('nameCanvas');
+  const container    = document.getElementById('canvasContainer');
+  const emptyHint    = document.getElementById('emptyHint');
+  const undoBtn      = document.getElementById('undoBtn');
+  const clearBtn     = document.getElementById('clearBtn');
+  const downloadBtn  = document.getElementById('downloadBtn');
+  const removeNameBtn = document.getElementById('removeNameBtn');
+  const thicknessSlider = document.getElementById('thicknessSlider');
+  const formatSelect = document.getElementById('formatSelect');
+  const nameInput    = document.getElementById('nameInput');
+  const nameFontSelect = document.getElementById('nameFontSelect');
+  const addNameBtn   = document.getElementById('addNameBtn');
+  const nameSizeSlider = document.getElementById('nameSizeSlider');
+  const modeToggle   = document.getElementById('modeToggle');
+  const modeDrawBtn  = document.getElementById('modeDrawBtn');
+  const modeMoveBtn  = document.getElementById('modeMoveBtn');
+
+  const ratio = Math.max(window.devicePixelRatio || 1, 1);
+
+  let nameText = '', nameFont = 'Dancing Script', nameFontSize = 32;
+  let nameColor = '#1A1A2E', namePos = { x: 0, y: 0 };
+  let nameVisible = false, isDragging = false;
+  let dragOffset = { x: 0, y: 0 }, mode = 'draw';
+
+  // ── SignaturePad (init before resize) ─────────────────
+  const signaturePad = new SignaturePad(sigCanvas, {
+    minWidth: 0.8, maxWidth: 2.5,
+    penColor: '#1A1A2E', backgroundColor: 'rgba(0,0,0,0)',
+  });
+
+  // ── Resize — preserve existing strokes ───────────────
+  let initialized = false;
+  let resizeTimer = null;
+  let isResizing = false;
+
+  function resizeCanvases() {
+    const w = sigCanvas.offsetWidth;
+    const h = sigCanvas.offsetHeight;
+    if (!w || !h) return;
+    if (isResizing) return; // prevent re-entry
+
+    isResizing = true;
+    const savedData = signaturePad.toData();
+
+    sigCanvas.width  = w * ratio; sigCanvas.height = h * ratio;
+    sigCanvas.getContext('2d').scale(ratio, ratio);
+    nameCanvas.width = w * ratio; nameCanvas.height = h * ratio;
+
+    if (savedData && savedData.length > 0) {
+      signaturePad.fromData(savedData);
+    } else {
+      signaturePad.clear();
+    }
+
+    if (nameVisible) drawName();
+    initialized = true;
+    isResizing = false;
+  }
+
+  // ── History — snapshot after each complete stroke ─────
+  // Store full stroke data arrays for reliable undo
+  let history = []; // each entry = full toData() snapshot after stroke
+
+  signaturePad.addEventListener('endStroke', () => {
+    // Push snapshot of all strokes so far
+    history.push(JSON.parse(JSON.stringify(signaturePad.toData())));
+    updateState();
+  });
+
+  signaturePad.addEventListener('afterUpdateStroke', updateState);
+
+  function updateState() {
+    const sigEmpty = signaturePad.isEmpty();
+    emptyHint.style.opacity = (sigEmpty && !nameVisible) ? '1' : '0';
+    undoBtn.disabled  = history.length === 0;
+    clearBtn.disabled = sigEmpty && !nameVisible;
+    downloadBtn.disabled = sigEmpty && !nameVisible;
+  }
+
+  // ── Draw name ─────────────────────────────────────────
+  function drawName() {
+    const ctx = nameCanvas.getContext('2d');
+    ctx.clearRect(0, 0, nameCanvas.width, nameCanvas.height);
+    if (!nameVisible || !nameText) return;
+    const fs = nameFontSize * ratio;
+    const fontFamily = nameFont === 'Playfair Display'
+      ? `italic 700 ${fs}px 'Playfair Display', serif`
+      : `600 ${fs}px '${nameFont}', cursive, serif`;
+    ctx.font = fontFamily;
+    ctx.fillStyle = nameColor;
+    ctx.textBaseline = 'middle';
+    ctx.fillText(nameText, namePos.x * ratio, namePos.y * ratio);
+  }
+
+  function measureTextWidth(text, font, size) {
+    const tmp = document.createElement('canvas');
+    const ctx = tmp.getContext('2d');
+    const fs = size * ratio;
+    ctx.font = font === 'Playfair Display'
+      ? `italic 700 ${fs}px 'Playfair Display', serif`
+      : `600 ${fs}px '${font}', cursive, serif`;
+    return ctx.measureText(text).width / ratio;
+  }
+
+  // ── Mode ──────────────────────────────────────────────
+  function setMode(m) {
+    mode = m;
+    if (m === 'draw') {
+      modeDrawBtn.classList.add('active'); modeMoveBtn.classList.remove('active');
+      signaturePad.on(); nameCanvas.classList.remove('drag-mode');
+    } else {
+      modeMoveBtn.classList.add('active'); modeDrawBtn.classList.remove('active');
+      signaturePad.off(); nameCanvas.classList.add('drag-mode');
+    }
+  }
+
+  modeDrawBtn.addEventListener('click', () => setMode('draw'));
+  modeMoveBtn.addEventListener('click', () => setMode('move'));
+
+  // ── Add name ──────────────────────────────────────────
+  addNameBtn.addEventListener('click', () => {
+    const val = nameInput.value.trim();
+    if (!val) { nameInput.focus(); return; }
+    nameText     = val;
+    nameFont     = nameFontSelect.value;
+    nameColor    = document.querySelector('.swatch.active').dataset.color;
+    nameFontSize = parseInt(nameSizeSlider.value);
+    nameVisible  = true;
+
+    const w  = sigCanvas.offsetWidth;
+    const h  = sigCanvas.offsetHeight;
+    const tw = measureTextWidth(nameText, nameFont, nameFontSize);
+    namePos  = { x: Math.max(8, w / 2 - tw / 2), y: h * 0.6 };
+
+    drawName();
+    modeToggle.classList.add('visible');
+    removeNameBtn.style.display = 'inline-flex';
+    updateState();
+  });
+
+  nameSizeSlider.addEventListener('input', () => {
+    nameFontSize = parseInt(nameSizeSlider.value);
+    if (nameVisible) drawName();
+  });
+
+  nameFontSelect.addEventListener('change', () => {
+    nameFont = nameFontSelect.value;
+    if (nameVisible) drawName();
+  });
+
+  // ── Remove name ───────────────────────────────────────
+  removeNameBtn.addEventListener('click', () => {
+    nameVisible = false; nameText = '';
+    nameCanvas.classList.remove('drag-mode', 'dragging');
+    removeNameBtn.style.display = 'none';
+    modeToggle.classList.remove('visible');
+    setMode('draw'); drawName(); updateState();
+  });
+
+  // ── Drag ──────────────────────────────────────────────
+  function getPos(e) {
+    const rect = nameCanvas.getBoundingClientRect();
+    const src  = e.touches ? e.touches[0] : e;
+    return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+  }
+
+  nameCanvas.addEventListener('mousedown', e => {
+    if (mode !== 'move' || !nameVisible) return;
+    e.preventDefault(); isDragging = true;
+    const p = getPos(e);
+    dragOffset = { x: p.x - namePos.x, y: p.y - namePos.y };
+    nameCanvas.classList.add('dragging');
+  });
+
+  nameCanvas.addEventListener('touchstart', e => {
+    if (mode !== 'move' || !nameVisible) return;
+    e.preventDefault(); isDragging = true;
+    const p = getPos(e);
+    dragOffset = { x: p.x - namePos.x, y: p.y - namePos.y };
+    nameCanvas.classList.add('dragging');
+  }, { passive: false });
+
+  window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    const p = getPos(e);
+    namePos = { x: p.x - dragOffset.x, y: p.y - dragOffset.y };
+    drawName();
+  });
+
+  window.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const p = getPos(e);
+    namePos = { x: p.x - dragOffset.x, y: p.y - dragOffset.y };
+    drawName();
+  }, { passive: false });
+
+  window.addEventListener('mouseup',  () => { isDragging = false; nameCanvas.classList.remove('dragging'); });
+  window.addEventListener('touchend', () => { isDragging = false; nameCanvas.classList.remove('dragging'); });
+
+  // ── Swatches ──────────────────────────────────────────
+  document.querySelectorAll('.swatch').forEach(s => {
+    s.addEventListener('click', () => {
+      document.querySelectorAll('.swatch').forEach(x => x.classList.remove('active'));
+      s.classList.add('active');
+      signaturePad.penColor = s.dataset.color;
+      if (nameVisible) { nameColor = s.dataset.color; drawName(); }
+    });
+  });
+
+  // ── Thickness ─────────────────────────────────────────
+  thicknessSlider.addEventListener('input', () => {
+    const val = parseFloat(thicknessSlider.value);
+    signaturePad.minWidth = val * 0.4;
+    signaturePad.maxWidth = val * 1.2;
+  });
+
+  // ── Undo ──────────────────────────────────────────────
+  undoBtn.addEventListener('click', () => {
+    if (history.length > 0) {
+      history.pop(); // remove current state
+      if (history.length > 0) {
+        // restore previous snapshot
+        signaturePad.fromData(JSON.parse(JSON.stringify(history[history.length - 1])));
+      } else {
+        signaturePad.clear();
+      }
+      updateState();
+    }
+  });
+
+  // ── Clear ─────────────────────────────────────────────
+  clearBtn.addEventListener('click', () => {
+    history = [];
+    signaturePad.clear();
+    nameVisible = false; nameText = '';
+    nameCanvas.classList.remove('drag-mode', 'dragging');
+    removeNameBtn.style.display = 'none';
+    modeToggle.classList.remove('visible');
+    setMode('draw'); drawName(); updateState();
+    emptyHint.style.opacity = '1';
+  });
+
+  // ── Download ──────────────────────────────────────────
+  downloadBtn.addEventListener('click', () => {
+    const format = formatSelect.value;
+    const w = sigCanvas.width, h = sigCanvas.height;
+    const flat = document.createElement('canvas');
+    flat.width = w; flat.height = h;
+    const ctx = flat.getContext('2d');
+    if (format === 'jpeg') { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); }
+    ctx.drawImage(sigCanvas, 0, 0);
+    ctx.drawImage(nameCanvas, 0, 0);
+
+    let dataUrl, filename;
+    if (format === 'jpeg') {
+      dataUrl = flat.toDataURL('image/jpeg', 0.92); filename = 'signature.jpg';
+    } else if (format === 'svg') {
+      const pngData = flat.toDataURL('image/png');
+      const cssW = sigCanvas.offsetWidth, cssH = sigCanvas.offsetHeight;
+      const svgStr = `<svg xmlns="http://www.w3.org/2000/svg" width="${cssW}" height="${cssH}"><image href="${pngData}" width="${cssW}" height="${cssH}"/></svg>`;
+      const blob = new Blob([svgStr], { type: 'image/svg+xml' });
+      dataUrl = URL.createObjectURL(blob); filename = 'signature.svg';
+    } else {
+      dataUrl = flat.toDataURL('image/png'); filename = 'signature.png';
+    }
+
+    const a = document.createElement('a');
+    a.href = dataUrl; a.download = filename; a.click();
+    if (format === 'svg') URL.revokeObjectURL(dataUrl);
+    showToast('Signature downloaded successfully');
+  });
+
+  // ── Toast ─────────────────────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // ── Init ──────────────────────────────────────────────
+  // Debounced resize to avoid infinite loop from ResizeObserver
+  const ro = new ResizeObserver(() => {
+    if (isResizing) return;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resizeCanvases, 30);
+  });
+  ro.observe(sigCanvas);
+  document.fonts.ready.then(() => { if (!initialized) resizeCanvases(); });
+</script>
+</body>
+</html>
